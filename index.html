@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3a0a15">
+<link rel="icon" href="assets/seal.png">
+<meta property="og:title" content="Dicey's Opening">
+<meta property="og:description" content="You're invited to the grand opening of Dicey's. 16th October 2026.">
+<style>:root{color-scheme:dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Dicey's Opening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Pinyon+Script&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js','locked');</script>
+<style>
+/* Layout: a sealed burgundy envelope fills the screen; tapping the wax seal opens it onto a burgundy room holding the lace-cut cream card, a live countdown to opening day and two action buttons. A deliberate single look (no light/dark switch), taken from the printed card. */
+:root {
+  --ground: #3a0a15;
+  --wine: #5c1424;
+  --velvet: #7a1d30;
+  --cream: #f1e8d6;
+  --cream-edge: #e2d4b6;
+  --gold: #c9a24b;
+  --gold-hi: #ecd18a;
+  --gold-deep: #8f6a26;
+  --ink: #4d1220;
+  --amber: #e89a3c;
+  --script: 'Pinyon Script', 'Snell Roundhand', 'Apple Chancery', cursive;
+  --caps: 'Cinzel', 'Trajan Pro', 'Times New Roman', serif;
+  --serif: 'Cormorant Garamond', 'Garamond', Georgia, serif;
+  --paper: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .18 0 0 0 .1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--ground); scrollbar-gutter: stable; }
+html.locked, html.locked body { overflow: hidden; height: 100%; }
+body {
+  background: var(--ground);
+  color: var(--cream);
+  font-family: var(--serif);
+  padding-inline: 16px;
+  padding-block: 0;
+  -webkit-text-size-adjust: 100%;
+}
+.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; }
+
+/* ---------- Intro envelope ---------- */
+.intro {
+  position: fixed; inset: 0; z-index: 100;
+  display: none; place-items: center;
+  background: radial-gradient(120% 80% at 50% 38%, #7d1f33 0%, #4c1020 55%, #2b070f 100%);
+  transition: opacity .6s ease;
+}
+.js .intro { display: grid; }
+.intro.leaving { opacity: 0; pointer-events: none; }
+.env-wrap {
+  --w: min(84vw, 360px, calc((100svh - 210px) / 1.72));
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 0;
+}
+.kicker {
+  transition: opacity .3s; margin: 0; font-family: var(--caps); font-size: 11px; letter-spacing: .34em; text-transform: uppercase;
+  color: var(--gold-hi); opacity: .9; text-align: center;
+}
+.env { position: relative; width: var(--w); height: calc(var(--w) * 1.18); margin-top: calc(var(--w) * .52); perspective: 1400px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.env > * { position: absolute; }
+.env-back { inset: 0; background: linear-gradient(180deg, #6d1a2c, #4a0f1d); border-radius: 3px; box-shadow: 0 30px 60px -18px rgba(0,0,0,.65), 0 0 0 1px rgba(236,209,138,.12); }
+.env-front {
+  inset: 0; z-index: 3;
+  clip-path: polygon(0 0, 50% 53%, 100% 0, 100% 100%, 0 100%);
+  background:
+    linear-gradient(150deg, rgba(255,255,255,.07), rgba(0,0,0,0) 40%),
+    linear-gradient(180deg, #7b1e32, #5a1325 70%, #4c1020);
+}
+.env-flap { left: 0; top: 0; width: 100%; height: 53%; z-index: 4; transform-origin: 50% 0; transform-style: preserve-3d; transition: transform .95s cubic-bezier(.5,0,.25,1) .12s; }
+.env-flap.behind { z-index: 1; }
+.flap-out, .flap-in { position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 100%); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flap-out { background: linear-gradient(180deg, #8a2338, #6a1a2c 70%, #5e1526); }
+.flap-in { background: linear-gradient(0deg, #4a0f1d, #3a0b17); transform: rotateX(180deg); }
+.env.open .env-flap { transform: rotateX(180deg); }
+.env.open { transition: transform 1s cubic-bezier(.55,0,.85,.45) var(--drop-delay, .75s); transform: translateY(var(--drop, 0px)); }
+.env:focus-visible { outline: none; }
+.env-clip { inset: 0; z-index: 2; clip-path: inset(-300vh -300vw 0 -300vw); pointer-events: none; }
+.env-clip .pop { position: absolute; left: 0; top: 0; margin: 0; transform-origin: 0 0; transition: transform 1.25s cubic-bezier(.25,.75,.2,1) .4s; }
+.env-clip .pop.reduced { transition: none; }
+
+.seal { left: 50%; top: 53%; width: 29%; aspect-ratio: 1; z-index: 6; transform: translate(-50%, -50%); }
+.seal::before { content: ""; position: absolute; inset: 6% -2% -8% -2%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.5), rgba(0,0,0,0)); }
+.seal img { position: relative; display: block; width: 100%; height: 100%; object-fit: contain; }
+.seal .ring { position: absolute; inset: 4%; border-radius: 50%; border: 1.5px solid var(--gold-hi); opacity: 0; animation: ping 2.6s ease-out infinite; }
+@keyframes ping { 0% { transform: scale(.9); opacity: .7; } 80%, 100% { transform: scale(1.7); opacity: 0; } }
+.env.open .seal { animation: sealPop .55s cubic-bezier(.4,0,.6,1) forwards; }
+.env.open .seal .ring { display: none; }
+@keyframes sealPop {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  35% { transform: translate(-50%, -50%) scale(1.22) rotate(-7deg); opacity: 1; }
+  100% { transform: translate(-50%, -42%) scale(.3) rotate(18deg); opacity: 0; }
+}
+.hint { margin: 26px 0 0; font-family: var(--serif); font-style: italic; font-size: 19px; color: var(--cream); letter-spacing: .02em; animation: breathe 2.4s ease-in-out infinite; text-align: center; }
+.intro.opening .hint { opacity: 0; animation: none; transition: opacity .3s; }
+.intro.opening .kicker { opacity: 0; }
+@keyframes breathe { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+/* ---------- The room ---------- */
+.room { position: relative; z-index: 1; max-width: 480px; margin-inline: auto; padding-block: 38px 56px; display: flex; flex-direction: column; align-items: stretch; gap: 34px; min-width: 0; }
+.js .room:not(.opened) { visibility: hidden; }
+.js .room:not(.opened) .rise { opacity: 0; }
+.room.opened .rise { animation: rise .95s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 110ms + 250ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.card {
+  position: relative; margin-inline: 14px; min-width: 0;
+  background: var(--cream) var(--paper);
+  background-image: var(--paper), radial-gradient(90% 60% at 50% 30%, #f6efe0, #eadfc6 100%);
+  color: var(--ink);
+  padding: 50px 26px 44px;
+  text-align: center;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(0,0,0,.2);
+}
+.lace { position: absolute; background: var(--cream); pointer-events: none; -webkit-mask-repeat: repeat; mask-repeat: repeat; -webkit-mask-composite: source-in; mask-composite: intersect; }
+.lace.t, .lace.b { left: -14px; right: -14px; height: 14px; -webkit-mask-size: 18px 14px; mask-size: 18px 14px; -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x; }
+.lace.l, .lace.r { top: -14px; bottom: -14px; width: 14px; -webkit-mask-size: 14px 18px; mask-size: 14px 18px; -webkit-mask-repeat: repeat-y; mask-repeat: repeat-y; }
+.lace.t { top: -14px;
+  -webkit-mask-image: radial-gradient(circle at 9px 7px, transparent 3.6px, #000 4.1px), radial-gradient(circle at 9px 0, transparent 5.4px, #000 5.9px);
+  mask-image: radial-gradient(circle at 9px 7px, transparent 3.6px, #000 4.1px), radial-gradient(circle at 9px 0, transparent 5.4px, #000 5.9px); }
+.lace.b { bottom: -14px;
+  -webkit-mask-image: radial-gradient(circle at 9px 7px, transparent 3.6px, #000 4.1px), radial-gradient(circle at 9px 14px, transparent 5.4px, #000 5.9px);
+  mask-image: radial-gradient(circle at 9px 7px, transparent 3.6px, #000 4.1px), radial-gradient(circle at 9px 14px, transparent 5.4px, #000 5.9px); }
+.lace.l { left: -14px;
+  -webkit-mask-image: radial-gradient(circle at 7px 9px, transparent 3.6px, #000 4.1px), radial-gradient(circle at 0 9px, transparent 5.4px, #000 5.9px);
+  mask-image: radial-gradient(circle at 7px 9px, transparent 3.6px, #000 4.1px), radial-gradient(circle at 0 9px, transparent 5.4px, #000 5.9px); }
+.lace.r { right: -14px;
+  -webkit-mask-image: radial-gradient(circle at 7px 9px, transparent 3.6px, #000 4.1px), radial-gradient(circle at 14px 9px, transparent 5.4px, #000 5.9px);
+  mask-image: radial-gradient(circle at 7px 9px, transparent 3.6px, #000 4.1px), radial-gradient(circle at 14px 9px, transparent 5.4px, #000 5.9px); }
+.frame { position: absolute; inset: 12px; border: 1px solid var(--gold); pointer-events: none; }
+.frame.two { inset: 17px; border-color: rgba(201,162,75,.45); }
+.corner { position: absolute; width: 34px; height: 34px; color: var(--gold); pointer-events: none; }
+.corner.tl { top: 8px; left: 8px; }
+.corner.tr { top: 8px; right: 8px; transform: scaleX(-1); }
+.corner.bl { bottom: 8px; left: 8px; transform: scaleY(-1); }
+.corner.br { bottom: 8px; right: 8px; transform: scale(-1, -1); }
+.card-body { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 0; }
+
+.orn { width: 150px; height: 14px; display: block; margin-block: 16px; }
+.orn.wide { width: 210px; }
+.for { margin: 0 0 6px; font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 19px; color: var(--ink); overflow-wrap: anywhere; }
+.for span { font-style: normal; letter-spacing: .04em; }
+h1.script { margin: 0; font-family: var(--script); font-weight: 400; font-size: clamp(46px, 13.6vw, 64px); line-height: 1.12; color: var(--ink); text-wrap: balance; padding-inline: 4px; }
+.caps { font-family: var(--caps); text-transform: uppercase; color: var(--ink); margin: 0; }
+.caps.small { font-family: var(--serif); font-weight: 600; font-size: clamp(13px, 3.8vw, 15px); letter-spacing: .3em; margin-top: 18px; padding-left: .3em; }
+h2.caps.big { font-weight: 600; font-size: clamp(22px, 6.2vw, 30px); letter-spacing: .08em; line-height: 1.15; margin-top: 8px; text-wrap: balance; }
+.of { display: flex; align-items: center; gap: 12px; margin: 14px 0 6px; font-family: var(--serif); font-weight: 600; font-size: 15px; letter-spacing: .3em; color: var(--ink); }
+.of i { display: block; width: 52px; height: 1px; background: var(--gold); }
+.logo { display: block; width: min(100%, 330px); height: auto; margin: 8px auto 0; }
+.label { font-family: var(--serif); font-weight: 600; font-size: clamp(13px, 3.8vw, 15px); letter-spacing: .3em; text-transform: uppercase; color: var(--ink); margin: 0; padding-left: .3em; }
+.date { margin: 6px 0 0; font-family: var(--serif); font-weight: 600; font-size: clamp(31px, 9vw, 42px); line-height: 1.1; color: var(--ink); white-space: nowrap; }
+.day { margin: 2px 0 0; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 17px; color: rgba(77,18,32,.75); }
+.save { font-family: var(--script); font-size: clamp(34px, 10vw, 44px); line-height: 1.1; margin: 0; color: var(--ink); }
+.caps.tiny { font-family: var(--serif); font-weight: 600; font-size: 11.5px; letter-spacing: .2em; line-height: 1.55; margin-top: 8px; padding-left: .2em; max-width: 24ch; text-wrap: balance; }
+
+/* Countdown */
+.count { text-align: center; min-width: 0; }
+.count h3 { margin: 0; font-family: var(--caps); font-weight: 500; font-size: 11px; letter-spacing: .34em; text-transform: uppercase; color: var(--gold-hi); }
+.cells { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 16px; border-block: 1px solid rgba(201,162,75,.4); }
+.cell { padding: 16px 4px 14px; position: relative; min-width: 0; }
+.cell + .cell::before { content: ""; position: absolute; left: 0; top: 22%; bottom: 22%; width: 1px; background: rgba(201,162,75,.3); }
+.num { display: block; font-family: var(--caps); font-weight: 600; font-size: clamp(28px, 8.6vw, 38px); line-height: 1; color: var(--cream); font-variant-numeric: tabular-nums; }
+.num.tick { animation: tick .35s ease; }
+@keyframes tick { from { transform: translateY(-6px); opacity: .4; } to { transform: none; opacity: 1; } }
+.unit { display: block; margin-top: 9px; font-family: var(--serif); font-weight: 600; font-size: 12px; letter-spacing: .24em; text-transform: uppercase; color: rgba(236,209,138,.8); padding-left: .24em; }
+.count .done { margin: 16px 0 0; font-family: var(--script); font-size: 38px; color: var(--gold-hi); line-height: 1.2; }
+
+/* Actions */
+.actions { display: flex; flex-direction: column; gap: 12px; }
+.btn { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 12px 18px; border-radius: 2px; text-decoration: none; font-family: var(--caps); font-weight: 600; font-size: 12.5px; letter-spacing: .2em; text-transform: uppercase; text-align: center; transition: transform .2s, background .2s; -webkit-tap-highlight-color: transparent; }
+.btn:active { transform: scale(.98); }
+.btn.primary { background: linear-gradient(180deg, var(--gold-hi), var(--gold) 55%, #b88c35); color: #3a0a15; box-shadow: 0 10px 24px -10px rgba(236,209,138,.55), inset 0 1px 0 rgba(255,255,255,.4); }
+.btn.ghost { color: var(--gold-hi); border: 1px solid rgba(201,162,75,.65); background: rgba(255,255,255,.03); letter-spacing: .12em; text-transform: none; font-family: var(--serif); font-size: 18px; font-weight: 600; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.foot { text-align: center; margin: 0; font-family: var(--serif); font-style: italic; font-size: 16px; color: rgba(241,232,214,.65); }
+
+canvas.fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hint, .seal .ring { animation: none; }
+  .env-flap, .intro, .pop, .env.open { transition-duration: .01s; transition-delay: 0s; }
+  .room.opened .rise { animation-duration: .01s; animation-delay: 0s; }
+}
+</style>
+</head>
+<body>
+
+
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="goldg" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#c9a24b" stop-opacity="0"/>
+      <stop offset=".25" stop-color="#c9a24b"/>
+      <stop offset=".5" stop-color="#e3c375"/>
+      <stop offset=".75" stop-color="#c9a24b"/>
+      <stop offset="1" stop-color="#c9a24b" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="sealg" cx=".35" cy=".3" r=".85">
+      <stop offset="0" stop-color="#f4dc98"/>
+      <stop offset=".45" stop-color="#cfa650"/>
+      <stop offset="1" stop-color="#8a6322"/>
+    </radialGradient>
+    <symbol id="orn" viewBox="0 0 220 14">
+      <rect x="0" y="6.5" width="92" height="1" fill="url(#goldg)"/>
+      <rect x="128" y="6.5" width="92" height="1" fill="url(#goldg)"/>
+      <path d="M110 1 L117 7 L110 13 L103 7 Z" fill="#c9a24b"/>
+      <circle cx="96" cy="7" r="1.6" fill="#c9a24b"/>
+      <circle cx="124" cy="7" r="1.6" fill="#c9a24b"/>
+    </symbol>
+    <symbol id="corner" viewBox="0 0 34 34">
+      <g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+        <path d="M3 31 C3 14 14 3 31 3"/>
+        <path d="M8 31 C8 19 19 8 31 8" opacity=".6"/>
+        <path d="M6 6 C10 6 12 9 10 12 C8 14 5 12 6 10"/>
+      </g>
+      <circle cx="6" cy="6" r="1.6" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Intro: sealed envelope -->
+<div class="intro" id="intro">
+  <div class="env-wrap">
+    <p class="kicker">An invitation from Dicey&rsquo;s</p>
+    <div class="env" id="env" role="button" tabindex="0" aria-label="Open the invitation">
+      <span class="env-back"></span>
+      <span class="env-clip" id="envClip"></span>
+      <span class="env-front"></span>
+      <span class="env-flap" id="flap"><span class="flap-out"></span><span class="flap-in"></span></span>
+      <span class="seal" id="seal"><span class="ring"></span><img src="assets/seal.png" alt="" width="230" height="217"></span>
+    </div>
+    <p class="hint">Tap the seal to open</p>
+  </div>
+</div>
+
+<main class="room" id="room">
+  <article class="card" id="card" aria-label="Invitation to the grand opening of Dicey's">
+    <span class="lace t"></span><span class="lace b"></span><span class="lace l"></span><span class="lace r"></span>
+    <span class="frame"></span><span class="frame two"></span>
+    <svg class="corner tl" aria-hidden="true"><use href="#corner"/></svg>
+    <svg class="corner tr" aria-hidden="true"><use href="#corner"/></svg>
+    <svg class="corner bl" aria-hidden="true"><use href="#corner"/></svg>
+    <svg class="corner br" aria-hidden="true"><use href="#corner"/></svg>
+
+    <div class="card-body">
+      <svg class="orn" aria-hidden="true" style="margin-top:0"><use href="#orn"/></svg>
+      <h1 class="script">You&rsquo;re Invited</h1>
+      <p class="caps small">Join us for the</p>
+      <h2 class="caps big">Grand Opening</h2>
+      <p class="of"><i></i>OF<i></i></p>
+      <img class="logo" src="assets/logo.png" alt="Dicey&rsquo;s. Good food, better pour&rsquo;s." width="640" height="414">
+      <svg class="orn wide" aria-hidden="true"><use href="#orn"/></svg>
+      <p class="label">Opening date</p>
+      <p class="date">16th October 2026</p>
+      <p class="day">Friday</p>
+      <svg class="orn" aria-hidden="true"><use href="#orn"/></svg>
+      <p class="save">Save the Date</p>
+      <p class="caps tiny">A new dining and pours experience</p>
+    </div>
+  </article>
+
+  <section class="count rise" style="--i:1" aria-label="Countdown to opening day">
+    <h3>Opening day is coming</h3>
+    <div class="cells" id="cells">
+      <div class="cell"><span class="num" id="cdD">00</span><span class="unit">Days</span></div>
+      <div class="cell"><span class="num" id="cdH">00</span><span class="unit">Hours</span></div>
+      <div class="cell"><span class="num" id="cdM">00</span><span class="unit">Mins</span></div>
+      <div class="cell"><span class="num" id="cdS">00</span><span class="unit">Secs</span></div>
+    </div>
+    <p class="done" id="cdDone" hidden>We&rsquo;re open. Come raise a glass.</p>
+  </section>
+
+  <section class="actions rise" style="--i:2">
+    <a class="btn primary" id="calBtn" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Dicey%27s%20Grand%20Opening&amp;dates=20261016/20261017&amp;details=Good%20food.%20Better%20pour%27s.%20A%20new%20dining%20and%20pours%20experience.&amp;location=Dicey%27s%2C%20Chikkamagaluru%2C%20Karnataka">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+      Add to calendar
+    </a>
+    <a class="btn ghost" target="_blank" rel="noopener" href="https://www.instagram.com/diceys_chikkamagalur/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>
+      @diceys_chikkamagalur
+    </a>
+  </section>
+
+  <p class="foot rise" style="--i:3">Dicey&rsquo;s &middot; Chikkamagaluru</p>
+</main>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---- Slow gold bubbles behind the card ---- */
+  var sprite = (function () {
+    var c = document.createElement('canvas'); c.width = c.height = 64;
+    var x = c.getContext('2d'), g = x.createRadialGradient(22, 22, 3, 32, 32, 30);
+    g.addColorStop(0, 'rgba(255,240,200,.95)'); g.addColorStop(.7, 'rgba(232,154,60,.22)'); g.addColorStop(1, 'rgba(232,154,60,.38)');
+    x.beginPath(); x.arc(32, 32, 30, 0, 6.2832); x.fillStyle = g; x.fill();
+    x.strokeStyle = 'rgba(236,209,138,.85)'; x.lineWidth = 2; x.stroke();
+    return c;
+  })();
+  function Layer(z) {
+    var c = document.createElement('canvas');
+    c.className = 'fx'; c.style.zIndex = z; c.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(c);
+    this.c = c; this.ctx = c.getContext('2d'); this.items = []; this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var self = this;
+    function size() { self.w = window.innerWidth; self.h = window.innerHeight; c.width = self.w * self.dpr; c.height = self.h * self.dpr; }
+    size(); window.addEventListener('resize', size);
+  }
+  Layer.prototype.draw = function () {
+    var ctx = this.ctx, list = this.items;
+    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    ctx.clearRect(0, 0, this.w, this.h);
+    for (var i = 0; i < list.length; i++) {
+      var b = list[i]; ctx.globalAlpha = b.a;
+      ctx.drawImage(sprite, b.x - b.r, b.y - b.r, b.r * 2, b.r * 2);
+    }
+    ctx.globalAlpha = 1;
+  };
+  var ambient = null, running = false;
+  function startAmbient() {
+    if (reduce || running) return; running = true;
+    ambient = new Layer(0);
+    for (var n = 0; n < 16; n++) ambient.items.push({ x: Math.random() * ambient.w, y: Math.random() * ambient.h, r: 2 + Math.random() * 6, vy: .25 + Math.random() * .6, ph: Math.random() * 6.28, a: .14 + Math.random() * .22 });
+    (function loop(t) {
+      var L = ambient, i;
+      for (i = 0; i < L.items.length; i++) {
+        var b = L.items[i]; b.y -= b.vy; b.x += Math.sin(t / 1100 + b.ph) * .25;
+        if (b.y < -12) { b.y = L.h + 12; b.x = Math.random() * L.w; }
+      }
+      L.draw();
+      requestAnimationFrame(loop);
+    })(0);
+  }
+  /* ---- Envelope: the whole invitation slides out, then becomes the page ---- */
+  var env = $('env'), intro = $('intro'), room = $('room'), flap = $('flap'), seal = $('seal'), clip = $('envClip'), real = $('card');
+  var pop = null, geo = null, opened = false;
+
+  function buildPop() {
+    if (opened) return;
+    window.scrollTo(0, 0);
+    var T = real.getBoundingClientRect(), E = env.getBoundingClientRect();
+    if (!pop) {
+      pop = real.cloneNode(true);
+      pop.removeAttribute('id');
+      [].forEach.call(pop.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
+      [].forEach.call(pop.querySelectorAll('button, a'), function (n) { n.tabIndex = -1; });
+      pop.classList.add('pop'); pop.setAttribute('aria-hidden', 'true'); pop.setAttribute('inert', '');
+      clip.appendChild(pop);
+    }
+    var s0 = .8 * E.width / T.width;
+    pop.style.width = T.width + 'px';
+    pop.style.transform = 'translate(' + (.1 * E.width) + 'px,' + (.06 * E.height) + 'px) scale(' + s0 + ')';
+    geo = { T: T, E: E };
+  }
+  buildPop();
+  window.addEventListener('resize', buildPop);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(buildPop);
+
+  function sparks() {
+    if (!env.animate) return;
+    var sr = seal.getBoundingClientRect(), er = env.getBoundingClientRect();
+    var cx = sr.left - er.left + sr.width / 2, cy = sr.top - er.top + sr.height / 2;
+    for (var i = 0; i < 14; i++) {
+      var s = document.createElement('span'), size = 3 + Math.random() * 4;
+      s.style.cssText = 'position:absolute;z-index:7;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff3c8,#d9b45a);width:' + size + 'px;height:' + size + 'px;left:' + (cx - size / 2) + 'px;top:' + (cy - size / 2) + 'px';
+      env.appendChild(s);
+      var ang = Math.random() * 6.283, dist = 50 + Math.random() * 90;
+      var a = s.animate([
+        { transform: 'translate(0,0) scale(1)', opacity: 1 },
+        { transform: 'translate(' + Math.cos(ang) * dist + 'px,' + (Math.sin(ang) * dist + 24) + 'px) scale(.2)', opacity: 0 }
+      ], { duration: 700 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
+      a.onfinish = (function (el) { return function () { el.remove(); }; })(s);
+    }
+  }
+  function finish() {
+    room.classList.add('opened');
+    document.documentElement.classList.remove('locked');
+    window.scrollTo(0, 0);
+    intro.classList.add('leaving');
+    startAmbient();
+    setTimeout(function () { intro.style.display = 'none'; }, 700);
+  }
+  function openEnv() {
+    if (opened) return;
+    buildPop();
+    opened = true;
+    var T = geo.T, E = geo.E;
+    var dy = window.innerHeight - E.top + 40;
+    env.style.setProperty('--drop', dy + 'px');
+    if (reduce) { pop.classList.add('reduced'); env.style.setProperty('--drop-delay', '0s'); }
+    intro.classList.add('opening');
+    env.classList.add('open');
+    void pop.offsetWidth;
+    pop.style.transform = 'translate(' + (T.left - E.left) + 'px,' + (T.top - E.top - dy) + 'px) scale(1)';
+    if (!reduce) sparks();
+    setTimeout(function () { flap.classList.add('behind'); }, reduce ? 0 : 500);
+    setTimeout(finish, reduce ? 80 : 1800);
+  }
+  env.addEventListener('click', openEnv);
+  env.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEnv(); } });
+
+  /* ---- Countdown to 16 Oct 2026, 00:00 IST ---- */
+  var target = new Date('2026-10-16T00:00:00+05:30').getTime();
+  var els = { D: $('cdD'), H: $('cdH'), M: $('cdM'), S: $('cdS') }, last = {};
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+  function set(k, v) {
+    var t = pad(v);
+    if (last[k] !== t) {
+      els[k].textContent = t; last[k] = t;
+      if (!reduce && opened) { els[k].classList.remove('tick'); void els[k].offsetWidth; els[k].classList.add('tick'); }
+    }
+  }
+  function tick() {
+    var diff = target - Date.now();
+    if (diff <= 0) { $('cells').hidden = true; $('cdDone').hidden = false; document.querySelector('.count h3').textContent = 'Opening day'; return false; }
+    var s = Math.floor(diff / 1000);
+    set('D', Math.floor(s / 86400)); set('H', Math.floor(s % 86400 / 3600)); set('M', Math.floor(s % 3600 / 60)); set('S', s % 60);
+    return true;
+  }
+  if (tick()) { var iv = setInterval(function () { if (!tick()) clearInterval(iv); }, 1000); }
+})();
+</script>
+
+</body>
+</html>
